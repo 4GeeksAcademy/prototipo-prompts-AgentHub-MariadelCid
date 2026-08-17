@@ -5,1499 +5,240 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AgentHub — Admin Panel</title>
 
-  <script>
-    tailwind = {
-      config: {
-        darkMode: 'class'
-      }
-    }
-  </script>
-
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
 </head>
 
-<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
-
-  <!-- =========================================================
-       APPLICATION SHELL
-  ========================================================== -->
+<body class="min-h-full overflow-x-hidden bg-slate-50 text-slate-800 antialiased transition-colors dark:bg-slate-900 dark:text-slate-100">
   <div class="min-h-screen">
+    <!-- Mobile / tablet backdrop for the sidebar -->
+    <div id="sidebarBackdrop" class="fixed inset-0 z-30 hidden bg-slate-950/60 lg:hidden" aria-hidden="true"></div>
 
-    <!-- =======================================================
-         SIDEBAR
-    ======================================================== -->
-    <aside class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#0f172a] text-slate-400">
-
-      <!-- Logo -->
-      <div class="flex h-16 items-center border-b border-slate-700 px-6">
-        <div class="flex items-center gap-3">
-          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
-            AH
-          </div>
-          <div>
-            <p class="font-bold text-white">AgentHub</p>
-            <p class="text-xs text-slate-500">Administration</p>
+    <!-- Persistent desktop sidebar / off-canvas mobile-tablet sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-72 max-w-[85vw] -translate-x-full flex-col bg-slate-950 text-slate-400 shadow-2xl transition-transform duration-300 ease-in-out lg:w-64 lg:translate-x-0 lg:shadow-none" aria-label="Navegación principal">
+      <div class="flex h-16 shrink-0 items-center justify-between border-b border-slate-700 px-4 sm:px-5 lg:px-6">
+        <div class="flex min-w-0 items-center gap-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white" aria-hidden="true">AH</div>
+          <div class="min-w-0">
+            <p class="truncate font-bold text-white">AgentHub</p>
+            <p class="truncate text-xs text-slate-500">Administration</p>
           </div>
         </div>
+        <button id="sidebarClose" type="button" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg text-slate-400 transition hover:bg-slate-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 lg:hidden" aria-label="Cerrar navegación">✕</button>
       </div>
 
-      <!-- Navigation -->
-      <nav class="flex-1 space-y-1 px-3 py-5" aria-label="Navegación principal">
-
-        <button
-          data-section="dashboard"
-          class="nav-link group flex w-full items-center gap-3 rounded-lg border-l-2 border-indigo-500 bg-slate-800/60 px-3 py-2.5 text-left text-sm font-medium text-white transition hover:bg-slate-800"
-        >
-          <span class="text-lg">▦</span>
-          <span>Dashboard</span>
-        </button>
-
-        <button
-          data-section="users"
-          class="nav-link group flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"
-        >
-          <span class="text-lg">♙</span>
-          <span>Users</span>
-        </button>
-
-        <button
-          data-section="agents"
-          class="nav-link group flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"
-        >
-          <span class="text-lg">◈</span>
-          <span>Agents</span>
-        </button>
-
-        <button
-          data-section="skills"
-          class="nav-link group flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"
-        >
-          <span class="text-lg">◇</span>
-          <span>Skills</span>
-        </button>
-
-        <button
-          data-section="hires"
-          class="nav-link group flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"
-        >
-          <span class="text-lg">◫</span>
-          <span>Hires</span>
-        </button>
-
-        <button
-          data-section="errors"
-          class="nav-link group flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"
-        >
-          <span class="text-lg">⚠</span>
-          <span>Error Logs</span>
-        </button>
-
+      <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-5" aria-label="Secciones">
+        <button type="button" data-section="dashboard" class="nav-link flex w-full items-center gap-3 rounded-lg border-l-2 border-indigo-500 bg-slate-800/60 px-3 py-2.5 text-left text-sm font-medium text-white transition hover:bg-slate-800" aria-current="page"><span class="text-lg" aria-hidden="true">▦</span><span>Dashboard</span></button>
+        <button type="button" data-section="users" class="nav-link flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"><span class="text-lg" aria-hidden="true">♙</span><span>Users</span></button>
+        <button type="button" data-section="agents" class="nav-link flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"><span class="text-lg" aria-hidden="true">◈</span><span>Agents</span></button>
+        <button type="button" data-section="skills" class="nav-link flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"><span class="text-lg" aria-hidden="true">◇</span><span>Skills</span></button>
+        <button type="button" data-section="hires" class="nav-link flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"><span class="text-lg" aria-hidden="true">◫</span><span>Hires</span></button>
+        <button type="button" data-section="errors" class="nav-link flex w-full items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2.5 text-left text-sm font-medium transition hover:bg-slate-800 hover:text-white"><span class="text-lg" aria-hidden="true">⚠</span><span>Error Logs</span></button>
       </nav>
 
-      <!-- Deploy -->
-      <div class="border-t border-slate-700 p-4">
-        <button
-          class="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
-        >
-          <span class="text-lg">+</span>
-          Deploy Agent
-        </button>
+      <div class="shrink-0 border-t border-slate-700 p-4">
+        <button type="button" class="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-950"><span class="text-lg" aria-hidden="true">+</span>Deploy Agent</button>
       </div>
     </aside>
 
-
-    <!-- =======================================================
-         MAIN AREA
-    ======================================================== -->
-    <div class="ml-64 min-h-screen">
-
-      <!-- =====================================================
-           TOP HEADER
-      ====================================================== -->
-      <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-6 backdrop-blur dark:border-slate-700 dark:bg-slate-900/95">
-
-        <div>
-          <p id="breadcrumb" class="text-sm font-medium text-slate-500 dark:text-slate-400">
-            Administration / Dashboard
-          </p>
+    <div class="min-h-screen lg:ml-64">
+      <header class="sticky top-0 z-20 flex min-h-16 items-center justify-between gap-3 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur transition-colors dark:border-slate-700 dark:bg-slate-900/95 sm:px-6 lg:px-8">
+        <div class="flex min-w-0 items-center gap-3">
+          <button id="sidebarOpen" type="button" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-xl text-slate-600 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 lg:hidden" aria-label="Abrir navegación" aria-controls="sidebar" aria-expanded="false">☰</button>
+          <p id="breadcrumb" class="truncate text-sm font-medium text-slate-500 dark:text-slate-400">Administration / Dashboard</p>
         </div>
 
-        <div class="flex items-center gap-4">
-
-          <div class="hidden text-right sm:block">
-            <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">
-              Admin User
-            </p>
-            <p class="text-xs text-slate-500 dark:text-slate-400">
-              administrator@agenthub.ai
-            </p>
+        <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+          <div class="hidden text-right md:block">
+            <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">Admin User</p>
+            <p class="max-w-[220px] truncate text-xs text-slate-500 dark:text-slate-400">administrator@agenthub.ai</p>
           </div>
-
-          <!-- Dark mode toggle -->
-          <button
-            id="themeToggle"
-            type="button"
-            aria-label="Cambiar modo oscuro"
-            class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-          >
-            <span id="themeIcon">☾</span>
-          </button>
-
+          <button id="themeToggle" type="button" aria-label="Cambiar a modo oscuro" aria-pressed="false" class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg text-slate-600 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"><span id="themeIcon" aria-hidden="true">☾</span></button>
         </div>
       </header>
 
+      <main class="min-w-0 p-4 sm:p-6 lg:p-8">
+        <!-- DASHBOARD -->
+        <section id="section-dashboard" class="app-section" aria-labelledby="dashboard-title">
+          <header class="mb-6">
+            <h1 id="dashboard-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100">Dashboard</h1>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Resumen general de actividad de AgentHub.</p>
+          </header>
 
-      <!-- =====================================================
-           CONTENT
-      ====================================================== -->
-      <main class="p-4 sm:p-6 lg:p-8">
-
-        <!-- ===================================================
-             DASHBOARD
-        ==================================================== -->
-        <section id="section-dashboard" class="app-section">
-
-          <div class="mb-6">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              Dashboard
-            </h1>
-            <p class="mt-1 text-sm font-normal text-slate-500 dark:text-slate-400">
-              Resumen general de actividad de AgentHub.
-            </p>
-          </div>
-
-          <!-- Metrics -->
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-
-            <!-- Revenue -->
-            <div class="rounded-xl border border-emerald-200/80 bg-white p-5 shadow-sm dark:border-emerald-900 dark:bg-slate-800">
-              <div class="flex items-start justify-between">
-                <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-100 text-xl text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
-                  €
-                </div>
-                <span class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
-                  ↗ 12%
-                </span>
-              </div>
-              <p class="mt-5 text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400">
-                INGRESOS TOTALES ESTE MES
-              </p>
-              <p class="mt-1 text-2xl font-bold text-slate-900 dark:text-white">
-                €84,250
-              </p>
-            </div>
-
-            <!-- Coupons -->
-            <div class="rounded-xl border border-amber-200/80 bg-white p-5 shadow-sm dark:border-amber-900 dark:bg-slate-800">
-              <div class="flex items-start justify-between">
-                <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-amber-100 text-xl text-amber-700 dark:bg-amber-950/60 dark:text-amber-300">
-                  %
-                </div>
-                <span class="rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
-                  ↘ 5%
-                </span>
-              </div>
-              <p class="mt-5 text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400">
-                PÉRDIDA POR DESCUENTOS
-              </p>
-              <p class="mt-1 text-2xl font-bold text-slate-900 dark:text-white">
-                €4,820
-              </p>
-            </div>
-
-            <!-- Active agents -->
-            <div class="rounded-xl border border-blue-200/80 bg-white p-5 shadow-sm dark:border-blue-900 dark:bg-slate-800">
-              <div class="flex items-start justify-between">
-                <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-blue-100 text-xl text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">
-                  ◈
-                </div>
-                <span class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
-                  ↗ 24
-                </span>
-              </div>
-              <p class="mt-5 text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400">
-                AGENTES ACTIVOS
-              </p>
-              <p class="mt-1 text-2xl font-bold text-slate-900 dark:text-white">
-                128
-              </p>
-            </div>
-
-            <!-- Errors -->
-            <div class="rounded-xl border border-rose-200/80 bg-white p-5 shadow-sm dark:border-rose-900 dark:bg-slate-800">
-              <div class="flex items-start justify-between">
-                <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-rose-100 text-xl text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
-                  !
-                </div>
-                <span class="rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
-                  ↘ 3
-                </span>
-              </div>
-              <p class="mt-5 text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400">
-                AGENTES FALLANDO
-              </p>
-              <p class="mt-1 text-2xl font-bold text-slate-900 dark:text-white">
-                7
-              </p>
-            </div>
-
+            <article class="rounded-xl border border-emerald-200/80 bg-white p-5 shadow-sm transition-colors dark:border-emerald-900 dark:bg-slate-800">
+              <div class="flex items-start justify-between gap-3"><div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-xl text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300" aria-hidden="true">€</div><span class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">↗ 12%</span></div>
+              <p class="mt-5 text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400">INGRESOS MENSUALES</p><p class="mt-1 text-2xl font-bold text-slate-900 dark:text-white">€84,250</p>
+            </article>
+            <article class="rounded-xl border border-amber-200/80 bg-white p-5 shadow-sm transition-colors dark:border-amber-900 dark:bg-slate-800">
+              <div class="flex items-start justify-between gap-3"><div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-xl text-amber-700 dark:bg-amber-950/60 dark:text-amber-300" aria-hidden="true">€</div><span class="rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">↘ 5%</span></div>
+              <p class="mt-5 text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400">COSTOS OPERATIVOS</p><p class="mt-1 text-2xl font-bold text-slate-900 dark:text-white">€21,430</p>
+            </article>
+            <article class="rounded-xl border border-blue-200/80 bg-white p-5 shadow-sm transition-colors dark:border-blue-900 dark:bg-slate-800">
+              <div class="flex items-start justify-between gap-3"><div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-xl text-blue-700 dark:bg-blue-950/60 dark:text-blue-300" aria-hidden="true">◈</div><span class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">↗ 24</span></div>
+              <p class="mt-5 text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400">AGENTES ACTIVOS</p><p class="mt-1 text-2xl font-bold text-slate-900 dark:text-white">128</p>
+            </article>
+            <article class="rounded-xl border border-rose-200/80 bg-white p-5 shadow-sm transition-colors dark:border-rose-900 dark:bg-slate-800">
+              <div class="flex items-start justify-between gap-3"><div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-xl text-rose-700 dark:bg-rose-950/60 dark:text-rose-300" aria-hidden="true">%</div><span class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">↘ 0.8%</span></div>
+              <p class="mt-5 text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400">TASA DE ERROR GLOBAL</p><p class="mt-1 text-2xl font-bold text-slate-900 dark:text-white">2.4%</p>
+            </article>
           </div>
 
-          <!-- Chart placeholder -->
-          <div class="mt-6 rounded-lg border border-dashed border-slate-200 bg-slate-50/80 p-6 dark:border-slate-700/60 dark:bg-slate-900/50">
-            <div class="flex min-h-[360px] items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700">
-              <div class="text-center text-slate-400 dark:text-slate-500">
-                <div class="mb-3 text-4xl">⌁</div>
-                <p class="font-medium">
-                  Área reservada para Gráfico de Actividad Semanal
-                </p>
-                <p class="mt-1 text-sm">
-                  Placeholder de visualización
-                </p>
-              </div>
-            </div>
-          </div>
-
+          <section class="mt-6 rounded-lg border border-dashed border-slate-200 bg-slate-50/80 p-4 dark:border-slate-700/60 dark:bg-slate-900/50 sm:p-6" aria-label="Gráfico de actividad semanal">
+            <div class="flex min-h-[280px] items-center justify-center rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800/50 sm:min-h-[360px]"><div class="px-4 text-center text-slate-400 dark:text-slate-500"><div class="mb-3 text-4xl" aria-hidden="true">⌁</div><p class="font-medium">Área reservada para Gráfico de Actividad Semanal</p><p class="mt-1 text-sm">Placeholder de visualización</p></div></div>
+          </section>
         </section>
 
-
-        <!-- ===================================================
-             USERS
-        ==================================================== -->
-        <section id="section-users" class="app-section hidden">
-
-          <div class="mb-6">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              Users
-            </h1>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Gestión de usuarios y suscripciones.
-            </p>
-          </div>
-
+        <!-- USERS -->
+        <section id="section-users" class="app-section hidden" aria-labelledby="users-title">
+          <header class="mb-6"><h1 id="users-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100">Users</h1><p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Gestión de usuarios y suscripciones.</p></header>
           <div class="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <div class="overflow-x-auto">
-              <table class="min-w-full text-left text-sm">
-                <thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900/60">
-                  <tr>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Usuario</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Email</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Plan</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Estado</th>
-                    <th class="px-6 py-4 text-right font-semibold text-slate-600 dark:text-slate-300">Acciones</th>
-                  </tr>
-                </thead>
-
-                <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-
-                  <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4">
-                      <div class="flex items-center gap-3">
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">LM</div>
-                        <span class="font-medium text-slate-800 dark:text-slate-100">Laura Martín</span>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">laura@acme.com</td>
-                    <td class="px-6 py-4">Enterprise</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Activo</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-user="Laura Martín" class="user-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="block w-full px-4 py-2 text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4">
-                      <div class="flex items-center gap-3">
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">DC</div>
-                        <span class="font-medium text-slate-800 dark:text-slate-100">Daniel Costa</span>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">daniel@northstar.io</td>
-                    <td class="px-6 py-4">Pro</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Activo</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-user="Daniel Costa" class="user-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="block w-full px-4 py-2 text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4">
-                      <div class="flex items-center gap-3">
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-violet-100 text-xs font-bold text-violet-700 dark:bg-violet-950 dark:text-violet-300">SR</div>
-                        <span class="font-medium text-slate-800 dark:text-slate-100">Sofía Ruiz</span>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">sofia@brightlabs.com</td>
-                    <td class="px-6 py-4">Basic</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-300">Inactivo</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-user="Sofía Ruiz" class="user-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="block w-full px-4 py-2 text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4">
-                      <div class="flex items-center gap-3">
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-700 dark:bg-orange-950 dark:text-orange-300">JM</div>
-                        <span class="font-medium text-slate-800 dark:text-slate-100">Javier Molina</span>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">javier@orbitgroup.es</td>
-                    <td class="px-6 py-4">Pro</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Activo</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-user="Javier Molina" class="user-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="block w-full px-4 py-2 text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4">
-                      <div class="flex items-center gap-3">
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-pink-100 text-xs font-bold text-pink-700 dark:bg-pink-950 dark:text-pink-300">EH</div>
-                        <span class="font-medium text-slate-800 dark:text-slate-100">Emma Harris</span>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">emma@futurecorp.com</td>
-                    <td class="px-6 py-4">Enterprise</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Activo</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-user="Emma Harris" class="user-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="block w-full px-4 py-2 text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </section>
-
-
-        <!-- ===================================================
-             AGENTS
-        ==================================================== -->
-        <section id="section-agents" class="app-section hidden">
-
-          <div class="mb-6">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              Agents
-            </h1>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Control y configuración de agentes IA.
-            </p>
-          </div>
-
-          <div class="space-y-3">
-
-            <!-- Agent 1 -->
-            <div class="rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div class="flex items-center justify-between gap-4 p-5">
-                <div class="flex min-w-0 items-center gap-4">
-                  <button class="accordion-trigger flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 transition dark:bg-indigo-950 dark:text-indigo-300">
-                    <span>⌄</span>
-                  </button>
-                  <div>
-                    <p class="font-semibold text-slate-800 dark:text-slate-100">Atlas Researcher</p>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Propietario: Northstar Inc.</p>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Activo</span>
-
-                  <div class="relative">
-                    <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                    <div class="dropdown-menu absolute right-0 top-10 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                      <button data-agent="Atlas Researcher" class="agent-config block w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Configurar</button>
-                      <button class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="accordion-content max-h-0 overflow-hidden px-5 transition-all duration-300">
-                <div class="border-t border-slate-200 py-4 dark:border-slate-700">
-                  <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Skills asociadas</p>
-                  <div class="flex flex-wrap gap-2 pb-2">
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">Web Navigation</span>
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">PDF Analysis</span>
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">Calendar</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Agent 2 -->
-            <div class="rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div class="flex items-center justify-between gap-4 p-5">
-                <div class="flex min-w-0 items-center gap-4">
-                  <button class="accordion-trigger flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 transition dark:bg-indigo-950 dark:text-indigo-300">
-                    <span>⌄</span>
-                  </button>
-                  <div>
-                    <p class="font-semibold text-slate-800 dark:text-slate-100">Nova Assistant</p>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Propietario: Acme Corp.</p>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Activo</span>
-
-                  <div class="relative">
-                    <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                    <div class="dropdown-menu absolute right-0 top-10 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                      <button data-agent="Nova Assistant" class="agent-config block w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Configurar</button>
-                      <button class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="accordion-content max-h-0 overflow-hidden px-5 transition-all duration-300">
-                <div class="border-t border-slate-200 py-4 dark:border-slate-700">
-                  <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Skills asociadas</p>
-                  <div class="flex flex-wrap gap-2 pb-2">
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">Calendar</span>
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">Email Automation</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Agent 3 -->
-            <div class="rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div class="flex items-center justify-between gap-4 p-5">
-                <div class="flex min-w-0 items-center gap-4">
-                  <button class="accordion-trigger flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 transition dark:bg-indigo-950 dark:text-indigo-300">
-                    <span>⌄</span>
-                  </button>
-                  <div>
-                    <p class="font-semibold text-slate-800 dark:text-slate-100">Mercury Sales Agent</p>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Propietario: Orbit Group</p>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <span class="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">Fallando</span>
-
-                  <div class="relative">
-                    <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                    <div class="dropdown-menu absolute right-0 top-10 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                      <button data-agent="Mercury Sales Agent" class="agent-config block w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Configurar</button>
-                      <button class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="accordion-content max-h-0 overflow-hidden px-5 transition-all duration-300">
-                <div class="border-t border-slate-200 py-4 dark:border-slate-700">
-                  <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Skills asociadas</p>
-                  <div class="flex flex-wrap gap-2 pb-2">
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">Web Navigation</span>
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">CRM</span>
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">Email Automation</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Agent 4 -->
-            <div class="rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div class="flex items-center justify-between gap-4 p-5">
-                <div class="flex min-w-0 items-center gap-4">
-                  <button class="accordion-trigger flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 transition dark:bg-indigo-950 dark:text-indigo-300">
-                    <span>⌄</span>
-                  </button>
-                  <div>
-                    <p class="font-semibold text-slate-800 dark:text-slate-100">Orion Document AI</p>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Propietario: Bright Labs</p>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-300">Inactivo</span>
-
-                  <div class="relative">
-                    <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                    <div class="dropdown-menu absolute right-0 top-10 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                      <button data-agent="Orion Document AI" class="agent-config block w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Configurar</button>
-                      <button class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="accordion-content max-h-0 overflow-hidden px-5 transition-all duration-300">
-                <div class="border-t border-slate-200 py-4 dark:border-slate-700">
-                  <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Skills asociadas</p>
-                  <div class="flex flex-wrap gap-2 pb-2">
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">PDF Analysis</span>
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">Document OCR</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- ===================================================
-             SKILLS
-        ==================================================== -->
-        <section id="section-skills" class="app-section hidden">
-
-          <div class="mb-6">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              Skills
-            </h1>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Catálogo de habilidades disponibles para los agentes.
-            </p>
-          </div>
-
-          <!-- Explanation -->
-          <div class="mb-6 rounded-xl border border-indigo-200 bg-indigo-50 p-5 dark:border-indigo-900 dark:bg-indigo-950/40">
-            <div class="flex gap-4">
-              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-xl text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                ◇
-              </div>
-              <div>
-                <h2 class="font-semibold text-indigo-950 dark:text-indigo-200">
-                  ¿Qué es una Skill en AgentHub?
-                </h2>
-                <p class="mt-1 max-w-3xl text-sm leading-6 text-indigo-800 dark:text-indigo-300">
-                  Una skill es una capacidad ejecutable que puede equiparse a un agente para ampliar sus funcionalidades. Por ejemplo, permite navegar por la web, leer y analizar PDFs o gestionar calendarios.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-
-            <!-- Skill -->
-            <div class="relative rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-slate-800 dark:text-slate-100">Web Navigation</h3>
-                  <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                    Permite al agente navegar y consultar información disponible en Internet.
-                  </p>
-                  <p class="mt-4 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                    68 agentes habilitados
-                  </p>
-                </div>
-
-                <div>
-                  <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                  <div class="dropdown-menu absolute right-5 top-14 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                    <button data-skill="Web Navigation" class="skill-detail block w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                    <button class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="relative rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-slate-800 dark:text-slate-100">PDF Analysis</h3>
-                  <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                    Permite extraer, interpretar y resumir información contenida en documentos PDF.
-                  </p>
-                  <p class="mt-4 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                    54 agentes habilitados
-                  </p>
-                </div>
-
-                <div>
-                  <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                  <div class="dropdown-menu absolute right-5 top-14 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                    <button data-skill="PDF Analysis" class="skill-detail block w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                    <button class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="relative rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-slate-800 dark:text-slate-100">Calendar Management</h3>
-                  <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                    Permite consultar, crear y gestionar eventos de calendario.
-                  </p>
-                  <p class="mt-4 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                    42 agentes habilitados
-                  </p>
-                </div>
-
-                <div>
-                  <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                  <div class="dropdown-menu absolute right-5 top-14 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                    <button data-skill="Calendar Management" class="skill-detail block w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                    <button class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="relative rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-slate-800 dark:text-slate-100">Email Automation</h3>
-                  <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                    Permite automatizar la redacción, envío y seguimiento de emails.
-                  </p>
-                  <p class="mt-4 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                    37 agentes habilitados
-                  </p>
-                </div>
-
-                <div>
-                  <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                  <div class="dropdown-menu absolute right-5 top-14 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                    <button data-skill="Email Automation" class="skill-detail block w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                    <button class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            <div class="overflow-x-auto"><table class="min-w-[720px] w-full text-left text-sm"><caption class="sr-only">Usuarios registrados en AgentHub</caption><thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900/60"><tr><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Usuario</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Email</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Plan</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Estado</th><th scope="col" class="px-4 py-4 text-right font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Acciones</th></tr></thead><tbody id="usersTableBody" class="divide-y divide-slate-200 dark:divide-slate-700"></tbody></table></div>
           </div>
         </section>
 
-
-        <!-- ===================================================
-             HIRES
-        ==================================================== -->
-        <section id="section-hires" class="app-section hidden">
-
-          <div class="mb-6">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              Hires
-            </h1>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Historial de contrataciones de agentes.
-            </p>
-          </div>
-
-          <div class="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <div class="overflow-x-auto">
-              <table class="min-w-[900px] w-full text-left text-sm">
-                <thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900/60">
-                  <tr>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Cliente</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Agente</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Skills</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Periodo</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Importe</th>
-                    <th class="px-6 py-4 text-right font-semibold text-slate-600 dark:text-slate-300">Acciones</th>
-                  </tr>
-                </thead>
-
-                <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-
-                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 font-medium">Acme Corp.</td>
-                    <td class="px-6 py-4">Nova Assistant</td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">Calendar, Email</td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">01/08/26 — 31/08/26</td>
-                    <td class="px-6 py-4 font-semibold">€1,450</td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-hire="Acme Corp." class="hire-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 font-medium">Northstar Inc.</td>
-                    <td class="px-6 py-4">Atlas Researcher</td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">Web, PDF, Calendar</td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">15/07/26 — 15/09/26</td>
-                    <td class="px-6 py-4 font-semibold">€3,200</td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-hire="Northstar Inc." class="hire-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 font-medium">Orbit Group</td>
-                    <td class="px-6 py-4">Mercury Sales Agent</td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">Web, CRM, Email</td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">01/08/26 — 30/09/26</td>
-                    <td class="px-6 py-4 font-semibold">€2,850</td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-hire="Orbit Group" class="hire-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 font-medium">Bright Labs</td>
-                    <td class="px-6 py-4">Orion Document AI</td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">PDF, OCR</td>
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">10/08/26 — 10/10/26</td>
-                    <td class="px-6 py-4 font-semibold">€2,100</td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-hire="Bright Labs" class="hire-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                </tbody>
-              </table>
-            </div>
-          </div>
-
+        <!-- AGENTS -->
+        <section id="section-agents" class="app-section hidden" aria-labelledby="agents-title">
+          <header class="mb-6"><h1 id="agents-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100">Agents</h1><p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Control y configuración de agentes IA.</p></header>
+          <div id="agentsList" class="space-y-3"></div>
         </section>
 
-
-        <!-- ===================================================
-             ERROR LOGS
-        ==================================================== -->
-        <section id="section-errors" class="app-section hidden">
-
-          <div class="mb-6">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              Error Logs
-            </h1>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Registro de ejecuciones fallidas y problemas detectados.
-            </p>
-          </div>
-
-          <div class="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <div class="overflow-x-auto">
-              <table class="min-w-[900px] w-full text-left text-sm">
-                <thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900/60">
-                  <tr>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Timestamp</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Agente</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Tipo</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Descripción</th>
-                    <th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">Estado</th>
-                    <th class="px-6 py-4 text-right font-semibold text-slate-600 dark:text-slate-300">Acciones</th>
-                  </tr>
-                </thead>
-
-                <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-
-                  <tr class="error-row hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">17/08/26 18:02:31</td>
-                    <td class="px-6 py-4 font-medium">Mercury Sales Agent</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Crítico</span>
-                    </td>
-                    <td class="px-6 py-4">CRM connection failed.</td>
-                    <td class="error-status px-6 py-4">
-                      <span class="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Pendiente</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-48 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-error="CRM connection failed" class="error-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="resolve-error block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Marcar como resuelto</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="error-row hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">17/08/26 16:45:12</td>
-                    <td class="px-6 py-4 font-medium">Atlas Researcher</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">Advertencia</span>
-                    </td>
-                    <td class="px-6 py-4">Rate limit approaching.</td>
-                    <td class="error-status px-6 py-4">
-                      <span class="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Pendiente</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-48 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-error="Rate limit approaching" class="error-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="resolve-error block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Marcar como resuelto</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="error-row hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">17/08/26 14:23:07</td>
-                    <td class="px-6 py-4 font-medium">Nova Assistant</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">Timeout</span>
-                    </td>
-                    <td class="px-6 py-4">Calendar API timed out.</td>
-                    <td class="error-status px-6 py-4">
-                      <span class="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Pendiente</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-48 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-error="Calendar API timed out" class="error-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="resolve-error block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Marcar como resuelto</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="error-row hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">17/08/26 11:17:44</td>
-                    <td class="px-6 py-4 font-medium">Orion Document AI</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Crítico</span>
-                    </td>
-                    <td class="px-6 py-4">OCR processing failed.</td>
-                    <td class="error-status px-6 py-4">
-                      <span class="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Pendiente</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-48 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-error="OCR processing failed" class="error-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="resolve-error block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Marcar como resuelto</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="error-row hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">16/08/26 22:41:09</td>
-                    <td class="px-6 py-4 font-medium">Mercury Sales Agent</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">Advertencia</span>
-                    </td>
-                    <td class="px-6 py-4">Email queue delayed.</td>
-                    <td class="error-status px-6 py-4">
-                      <span class="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Pendiente</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-48 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-error="Email queue delayed" class="error-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="resolve-error block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Marcar como resuelto</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr class="error-row hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400">16/08/26 19:05:55</td>
-                    <td class="px-6 py-4 font-medium">Atlas Researcher</td>
-                    <td class="px-6 py-4">
-                      <span class="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">Timeout</span>
-                    </td>
-                    <td class="px-6 py-4">External website response timeout.</td>
-                    <td class="error-status px-6 py-4">
-                      <span class="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Pendiente</span>
-                    </td>
-                    <td class="relative px-6 py-4 text-right">
-                      <button class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">⋮</button>
-                      <div class="dropdown-menu absolute right-6 top-12 z-20 hidden w-48 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                        <button data-error="External website response timeout" class="error-detail block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Ver detalle</button>
-                        <button class="resolve-error block w-full px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">Marcar como resuelto</button>
-                      </div>
-                    </td>
-                  </tr>
-
-                </tbody>
-              </table>
-            </div>
-          </div>
-
+        <!-- SKILLS -->
+        <section id="section-skills" class="app-section hidden" aria-labelledby="skills-title">
+          <header class="mb-6"><h1 id="skills-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100">Skills</h1><p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Catálogo de habilidades disponibles para los agentes.</p></header>
+          <aside class="mb-6 rounded-xl border border-indigo-200 bg-indigo-50 p-4 dark:border-indigo-900 dark:bg-indigo-950/40 sm:p-5" aria-label="Información sobre skills"><div class="flex items-start gap-3 sm:gap-4"><div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-xl text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300" aria-hidden="true">◇</div><div class="min-w-0"><h2 class="font-semibold text-indigo-950 dark:text-indigo-200">¿Qué es una Skill en AgentHub?</h2><p class="mt-1 text-sm leading-6 text-indigo-800 dark:text-indigo-300">Una skill es una capacidad ejecutable que puede equiparse a un agente para ampliar sus funcionalidades. Por ejemplo, permite navegar por la web, leer y analizar PDFs o gestionar calendarios.</p></div></div></aside>
+          <div id="skillsGrid" class="grid grid-cols-1 gap-4 md:grid-cols-2"></div>
         </section>
 
+        <!-- HIRES -->
+        <section id="section-hires" class="app-section hidden" aria-labelledby="hires-title">
+          <header class="mb-6"><h1 id="hires-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100">Hires</h1><p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Historial de contrataciones de agentes.</p></header>
+          <div class="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"><div class="overflow-x-auto"><table class="min-w-[980px] w-full text-left text-sm"><caption class="sr-only">Historial de contrataciones</caption><thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900/60"><tr><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Cliente</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Agente</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Skills</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Periodo</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Importe</th><th scope="col" class="px-4 py-4 text-right font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Acciones</th></tr></thead><tbody id="hiresTableBody" class="divide-y divide-slate-200 dark:divide-slate-700"></tbody></table></div></div>
+        </section>
+
+        <!-- ERROR LOGS -->
+        <section id="section-errors" class="app-section hidden" aria-labelledby="errors-title">
+          <header class="mb-6"><h1 id="errors-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100">Error Logs</h1><p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Registro de ejecuciones fallidas y problemas detectados.</p></header>
+          <div class="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"><div class="overflow-x-auto"><table class="min-w-[980px] w-full text-left text-sm"><caption class="sr-only">Registro de errores de ejecución</caption><thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900/60"><tr><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Timestamp</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Agente</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Tipo</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Descripción</th><th scope="col" class="px-4 py-4 font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Estado</th><th scope="col" class="px-4 py-4 text-right font-semibold text-slate-600 dark:text-slate-300 sm:px-6">Acciones</th></tr></thead><tbody id="errorsTableBody" class="divide-y divide-slate-200 dark:divide-slate-700"></tbody></table></div></div>
+        </section>
       </main>
     </div>
   </div>
 
-
-  <!-- =========================================================
-       MODAL
-  ========================================================== -->
-  <div
-    id="modalBackdrop"
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 p-4"
-  >
-    <div
-      id="modal"
-      class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-800"
-    >
-
-      <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-slate-700">
-        <h2 id="modalTitle" class="text-lg font-bold text-slate-800 dark:text-slate-100">
-          Detalle
-        </h2>
-
-        <button
-          id="modalClose"
-          class="flex h-9 w-9 items-center justify-center rounded-lg text-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700"
-          aria-label="Cerrar modal"
-        >
-          ✕
-        </button>
-      </div>
-
-      <div id="modalBody" class="p-6"></div>
-
-      <div class="flex justify-end gap-3 border-t border-slate-200 px-6 py-4 dark:border-slate-700">
-        <button
-          id="modalFooterClose"
-          class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
-        >
-          Cerrar
-        </button>
-      </div>
-
+  <!-- Generic modal -->
+  <div id="modalBackdrop" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 p-3 sm:p-4" role="presentation">
+    <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" class="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-800">
+      <header class="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 px-4 py-4 dark:border-slate-700 sm:px-6"><h2 id="modalTitle" class="min-w-0 text-lg font-bold text-slate-800 dark:text-slate-100">Detalle</h2><button id="modalClose" type="button" aria-label="Cerrar modal" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:hover:bg-slate-700 dark:hover:text-slate-200">✕</button></header>
+      <div id="modalBody" class="min-h-0 overflow-y-auto p-4 sm:p-6"></div>
+      <footer class="flex shrink-0 justify-end border-t border-slate-200 px-4 py-4 dark:border-slate-700 sm:px-6"><button id="modalFooterClose" type="button" class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">Cerrar</button></footer>
     </div>
   </div>
 
-
-  <!-- =========================================================
-       JAVASCRIPT VANILLA
-  ========================================================== -->
   <script>
-
-    /* ========================================================
-       SECTION NAVIGATION
-    ========================================================= */
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.app-section');
-    const breadcrumb = document.getElementById('breadcrumb');
-
-    const sectionNames = {
-      dashboard: 'Dashboard',
-      users: 'Users',
-      agents: 'Agents',
-      skills: 'Skills',
-      hires: 'Hires',
-      errors: 'Error Logs'
-    };
-
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-
-        const target = link.dataset.section;
-
-        sections.forEach(section => {
-          section.classList.add('hidden');
-        });
-
-        document
-          .getElementById(`section-${target}`)
-          .classList.remove('hidden');
-
-        navLinks.forEach(item => {
-          item.classList.remove(
-            'border-indigo-500',
-            'bg-slate-800/60',
-            'text-white'
-          );
-
-          item.classList.add(
-            'border-transparent'
-          );
-        });
-
-        link.classList.remove('border-transparent');
-        link.classList.add(
-          'border-indigo-500',
-          'bg-slate-800/60',
-          'text-white'
-        );
-
-        breadcrumb.textContent = `Administration / ${sectionNames[target]}`;
-
-        closeDropdowns();
-      });
-    });
-
-
-    /* ========================================================
-       DARK MODE
-    ========================================================= */
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-
-    themeToggle.addEventListener('click', () => {
-
-      document.documentElement.classList.toggle('dark');
-
-      if (document.documentElement.classList.contains('dark')) {
-        themeIcon.textContent = '☀';
-      } else {
-        themeIcon.textContent = '☾';
-      }
-    });
-
-
-    /* ========================================================
-       DROPDOWNS
-    ========================================================= */
-    function closeDropdowns() {
-      document.querySelectorAll('.dropdown-menu').forEach(menu => {
-        menu.classList.add('hidden');
-      });
-    }
-
-    document.querySelectorAll('.dropdown-trigger').forEach(trigger => {
-
-      trigger.addEventListener('click', event => {
-
-        event.stopPropagation();
-
-        const menu = trigger.parentElement.querySelector('.dropdown-menu');
-
-        closeDropdowns();
-
-        if (menu) {
-          menu.classList.toggle('hidden');
-        }
-      });
-
-    });
-
-    document.addEventListener('click', event => {
-
-      if (!event.target.closest('.dropdown-menu') &&
-          !event.target.closest('.dropdown-trigger')) {
-        closeDropdowns();
-      }
-
-    });
-
-
-    /* ========================================================
-       MODAL SYSTEM
-    ========================================================= */
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const modal = document.getElementById('modal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    const modalClose = document.getElementById('modalClose');
-    const modalFooterClose = document.getElementById('modalFooterClose');
-
-    function openModal(title, content) {
-
-      modalTitle.textContent = title;
-      modalBody.innerHTML = content;
-
-      modalBackdrop.classList.remove('hidden');
-      modalBackdrop.classList.add('flex');
-
-      document.body.classList.add('overflow-hidden');
-    }
-
-    function closeModal() {
-
-      modalBackdrop.classList.add('hidden');
-      modalBackdrop.classList.remove('flex');
-
-      document.body.classList.remove('overflow-hidden');
-    }
-
-    modalClose.addEventListener('click', closeModal);
-    modalFooterClose.addEventListener('click', closeModal);
-
-    modalBackdrop.addEventListener('click', event => {
-
-      if (event.target === modalBackdrop) {
-        closeModal();
-      }
-
-    });
-
-
-    /* ========================================================
-       USER DETAILS
-    ========================================================= */
-    document.querySelectorAll('.user-detail').forEach(button => {
-
-      button.addEventListener('click', () => {
-
-        const user = button.dataset.user;
-
-        openModal(
-          `Detalle de ${user}`,
-          `
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-              <div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">ID</p>
-                <p class="mt-1 font-medium">USR-2026-00${Math.floor(Math.random() * 9) + 1}</p>
-              </div>
-
-              <div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Fecha de alta</p>
-                <p class="mt-1 font-medium">12/03/2026</p>
-              </div>
-
-              <div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Método de pago</p>
-                <p class="mt-1 font-medium">Visa •••• 4242</p>
-              </div>
-
-              <div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Plan</p>
-                <p class="mt-1 font-medium">Enterprise</p>
-              </div>
-
-            </div>
-
-            <div class="mt-6">
-              <h3 class="font-semibold">Límites del plan</h3>
-
-              <div class="mt-3 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700">
-                <div class="flex justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-                  <span>Agentes</span>
-                  <span class="font-semibold">25</span>
-                </div>
-
-                <div class="flex justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-                  <span>Ejecuciones mensuales</span>
-                  <span class="font-semibold">50,000</span>
-                </div>
-
-                <div class="flex justify-between px-4 py-3">
-                  <span>Usuarios del equipo</span>
-                  <span class="font-semibold">100</span>
-                </div>
-              </div>
-            </div>
-          `
-        );
-
-        closeDropdowns();
-      });
-
-    });
-
-
-    /* ========================================================
-       AGENT ACCORDIONS
-    ========================================================= */
-    document.querySelectorAll('.accordion-trigger').forEach(trigger => {
-
-      trigger.addEventListener('click', () => {
-
-        const content = trigger
-          .closest('.rounded-xl')
-          .querySelector('.accordion-content');
-
-        const icon = trigger.querySelector('span');
-
-        if (content.classList.contains('max-h-0')) {
-
-          content.classList.remove('max-h-0');
-          content.classList.add('max-h-40');
-
-          icon.textContent = '⌃';
-
-        } else {
-
-          content.classList.add('max-h-0');
-          content.classList.remove('max-h-40');
-
-          icon.textContent = '⌄';
-        }
-
-      });
-
-    });
-
-
-    /* ========================================================
-       AGENT CONFIGURATION MODAL
-    ========================================================= */
-    document.querySelectorAll('.agent-config').forEach(button => {
-
-      button.addEventListener('click', () => {
-
-        const agent = button.dataset.agent;
-
-        openModal(
-          `Configurar — ${agent}`,
-          `
-            <div>
-              <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                System Prompt
-              </label>
-
-              <textarea
-                class="min-h-[300px] w-full rounded-lg border border-slate-300 bg-white p-4 font-mono text-sm text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
-              >You are ${agent}, an AI business assistant operating within AgentHub.
-
-Your role is to assist the assigned customer with business tasks while following all platform policies.
-
-Always:
-- Provide accurate and concise answers.
-- Use available skills when appropriate.
-- Ask for clarification when required information is missing.
-- Never invent information or claim an action was completed if it was not.</textarea>
-
-              <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                El System Prompt es editable en este prototipo frontend.
-              </p>
-            </div>
-          `
-        );
-
-        closeDropdowns();
-      });
-
-    });
-
-
-    /* ========================================================
-       SKILL DETAIL
-    ========================================================= */
-    document.querySelectorAll('.skill-detail').forEach(button => {
-
-      button.addEventListener('click', () => {
-
-        const skill = button.dataset.skill;
-
-        openModal(
-          `Detalle técnico — ${skill}`,
-          `
-            <div class="space-y-5">
-
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Identificador
-                </p>
-                <p class="mt-1 font-mono text-sm">
-                  skill.${skill.toLowerCase().replaceAll(' ', '_')}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Descripción técnica
-                </p>
-                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                  Capacidad ejecutable de AgentHub que expone funcionalidades específicas al agente mediante una interfaz controlada.
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Permisos
-                </p>
-
-                <div class="mt-2 flex flex-wrap gap-2">
-                  <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">execute</span>
-                  <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">read</span>
-                  <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">api_access</span>
-                </div>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Estado
-                </p>
-
-                <span class="mt-2 inline-block rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                  Disponible
-                </span>
-              </div>
-
-            </div>
-          `
-        );
-
-        closeDropdowns();
-      });
-
-    });
-
-
-    /* ========================================================
-       HIRES DETAIL
-    ========================================================= */
-    document.querySelectorAll('.hire-detail').forEach(button => {
-
-      button.addEventListener('click', () => {
-
-        const client = button.dataset.hire;
-
-        openModal(
-          `Contrato — ${client}`,
-          `
-            <div class="space-y-6">
-
-              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-                <div>
-                  <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Cliente
-                  </p>
-                  <p class="mt-1 font-medium">${client}</p>
-                </div>
-
-                <div>
-                  <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Contrato
-                  </p>
-                  <p class="mt-1 font-mono text-sm">HIRE-2026-0084</p>
-                </div>
-
-              </div>
-
-              <div>
-                <h3 class="mb-3 font-semibold">Desglose financiero</h3>
-
-                <div class="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700">
-                  <div class="flex justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-                    <span>Precio base del agente</span>
-                    <span class="font-medium">€1,000.00</span>
-                  </div>
-
-                  <div class="flex justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-                    <span>Web Navigation</span>
-                    <span class="font-medium">€150.00</span>
-                  </div>
-
-                  <div class="flex justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-                    <span>PDF Analysis</span>
-                    <span class="font-medium">€180.00</span>
-                  </div>
-
-                  <div class="flex justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-                    <span>Calendar Management</span>
-                    <span class="font-medium">€120.00</span>
-                  </div>
-
-                  <div class="flex justify-between bg-slate-50 px-4 py-4 dark:bg-slate-900/60">
-                    <span class="font-bold">Total</span>
-                    <span class="font-bold text-indigo-600 dark:text-indigo-400">€1,450.00</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          `
-        );
-
-        closeDropdowns();
-      });
-
-    });
-
-
-    /* ========================================================
-       ERROR DETAILS
-    ========================================================= */
-    document.querySelectorAll('.error-detail').forEach(button => {
-
-      button.addEventListener('click', () => {
-
-        const error = button.dataset.error;
-
-        openModal(
-          `Stack Trace — ${error}`,
-          `
-            <div class="rounded-lg bg-slate-950 p-5 text-xs leading-6 text-slate-300">
-
-              <p>AgentHubExecutionError: ${error}</p>
-              <p>    at AgentRuntime.execute (/agenthub/runtime/executor.js:184:17)</p>
-              <p>    at AgentRuntime.processTask (/agenthub/runtime/agent.js:92:11)</p>
-              <p>    at SkillRunner.run (/agenthub/runtime/skills.js:67:21)</p>
-              <p>    at async TaskQueue.consume (/agenthub/runtime/queue.js:143:9)</p>
-              <p>    at async processTicksAndRejections (node:internal/process/task_queues:95:5)</p>
-
-              <p class="mt-4 text-rose-400">
-                Error code: AGENT_EXECUTION_FAILED
-              </p>
-
-            </div>
-          `
-        );
-
-        closeDropdowns();
-      });
-
-    });
-
-
-    /* ========================================================
-       RESOLVE ERROR
-    ========================================================= */
-    document.querySelectorAll('.resolve-error').forEach(button => {
-
-      button.addEventListener('click', () => {
-
-        const row = button.closest('.error-row');
-        const status = row.querySelector('.error-status');
-
-        status.innerHTML = `
-          <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-            Resuelto
-          </span>
-        `;
-
-        row.classList.add(
-          'bg-emerald-50/40',
-          'dark:bg-emerald-950/20'
-        );
-
-        closeDropdowns();
-      });
-
-    });
-
-
-    /* ========================================================
-       ESC KEY
-    ========================================================= */
-    document.addEventListener('keydown', event => {
-
-      if (event.key === 'Escape') {
-        closeModal();
-        closeDropdowns();
-      }
-
-    });
-
+    const users = [
+      { id:'USR-001', initials:'LM', name:'Laura Martín', email:'laura@acme.com', plan:'Enterprise', status:'Activo', signup:'12/03/2026', payment:'Visa •••• 4242', limits:{agents:'25', executions:'50,000', teamUsers:'100'} },
+      { id:'USR-002', initials:'DC', name:'Daniel Costa', email:'daniel@northstar.io', plan:'Pro', status:'Activo', signup:'21/04/2026', payment:'Mastercard •••• 8211', limits:{agents:'10', executions:'20,000', teamUsers:'25'} },
+      { id:'USR-003', initials:'SR', name:'Sofía Ruiz', email:'sofia@brightlabs.com', plan:'Basic', status:'Inactivo', signup:'08/02/2026', payment:'Visa •••• 1098', limits:{agents:'3', executions:'5,000', teamUsers:'5'} },
+      { id:'USR-004', initials:'JM', name:'Javier Molina', email:'javier@orbitgroup.es', plan:'Pro', status:'Activo', signup:'17/05/2026', payment:'Visa •••• 6642', limits:{agents:'10', executions:'20,000', teamUsers:'25'} },
+      { id:'USR-005', initials:'EH', name:'Emma Harris', email:'emma@futurecorp.com', plan:'Enterprise', status:'Activo', signup:'03/01/2026', payment:'Amex •••• 5512', limits:{agents:'25', executions:'50,000', teamUsers:'100'} }
+    ];
+
+    const agents = [
+      { id:'AG-001', name:'Atlas Researcher', owner:'Northstar Inc.', ownerUser:'Daniel Costa', status:'Activo', skills:['Web Navigation','PDF Analysis','Calendar Management'], systemPrompt:'You are Atlas Researcher, an AI research assistant for Northstar Inc.\n\nYour primary responsibility is to research information accurately and efficiently.\n\nUse Web Navigation when current external information is required.\nUse PDF Analysis when the task involves documents.\nUse Calendar Management when scheduling or calendar operations are explicitly requested.\n\nAlways distinguish facts from assumptions and never fabricate sources.' },
+      { id:'AG-002', name:'Nova Assistant', owner:'Acme Corp.', ownerUser:'Laura Martín', status:'Activo', skills:['Calendar Management','Email Automation'], systemPrompt:'You are Nova Assistant, an AI business assistant for Acme Corp.\n\nHelp users organize their calendars and automate business email workflows.\n\nAlways confirm important scheduling details before taking action.\nNever claim an email was sent unless the execution was successful.' },
+      { id:'AG-003', name:'Mercury Sales Agent', owner:'Orbit Group', ownerUser:'Javier Molina', status:'Fallando', skills:['Web Navigation','CRM','Email Automation'], systemPrompt:'You are Mercury Sales Agent, a sales automation assistant for Orbit Group.\n\nYour responsibilities include researching prospects, updating CRM information and supporting sales communication.\n\nRespect CRM permissions and never invent customer information.\n\nIf a CRM operation fails, report the failure clearly.' },
+      { id:'AG-004', name:'Orion Document AI', owner:'Bright Labs', ownerUser:'Sofía Ruiz', status:'Inactivo', skills:['PDF Analysis','Document OCR'], systemPrompt:'You are Orion Document AI, a document processing assistant for Bright Labs.\n\nExtract and analyze information from uploaded documents.\n\nWhen OCR confidence is low, clearly indicate that the extracted information requires verification.' }
+    ];
+
+    const skills = [
+      { id:'SK-001', name:'Web Navigation', description:'Permite al agente navegar y consultar información disponible en Internet.', enabledAgents:2, permissions:['execute','read','network_access'], technical:'Provides controlled web navigation capabilities for retrieving information from external websites.' },
+      { id:'SK-002', name:'PDF Analysis', description:'Permite extraer, interpretar y resumir información contenida en documentos PDF.', enabledAgents:2, permissions:['execute','read','document_access'], technical:'Extracts structured information from PDF documents and makes the content available to the agent.' },
+      { id:'SK-003', name:'Calendar Management', description:'Permite consultar, crear y gestionar eventos de calendario.', enabledAgents:2, permissions:['read','create','update'], technical:'Provides controlled access to calendar resources for event management and scheduling.' },
+      { id:'SK-004', name:'Email Automation', description:'Permite automatizar la redacción, envío y seguimiento de emails.', enabledAgents:2, permissions:['read','compose','send'], technical:'Provides controlled email composition and sending capabilities.' },
+      { id:'SK-005', name:'CRM', description:'Permite consultar y actualizar información relacionada con clientes y oportunidades.', enabledAgents:1, permissions:['read','update'], technical:'Provides controlled CRM operations for customer and opportunity records.' },
+      { id:'SK-006', name:'Document OCR', description:'Permite extraer texto de documentos e imágenes mediante OCR.', enabledAgents:1, permissions:['execute','read','ocr'], technical:'Extracts machine-readable text from scanned documents and images.' }
+    ];
+
+    const hires = [
+      { id:'HIRE-001', client:'Acme Corp.', agent:'Nova Assistant', skills:['Calendar Management','Email Automation'], start:'01/08/2026', end:'31/08/2026', basePrice:1000, skillPrices:{'Calendar Management':200,'Email Automation':250}, total:1450 },
+      { id:'HIRE-002', client:'Northstar Inc.', agent:'Atlas Researcher', skills:['Web Navigation','PDF Analysis','Calendar Management'], start:'15/07/2026', end:'15/09/2026', basePrice:2200, skillPrices:{'Web Navigation':400,'PDF Analysis':350,'Calendar Management':250}, total:3200 },
+      { id:'HIRE-003', client:'Orbit Group', agent:'Mercury Sales Agent', skills:['Web Navigation','CRM','Email Automation'], start:'01/08/2026', end:'30/09/2026', basePrice:1800, skillPrices:{'Web Navigation':350,'CRM':400,'Email Automation':300}, total:2850 },
+      { id:'HIRE-004', client:'Bright Labs', agent:'Orion Document AI', skills:['PDF Analysis','Document OCR'], start:'10/08/2026', end:'10/10/2026', basePrice:1400, skillPrices:{'PDF Analysis':400,'Document OCR':300}, total:2100 }
+    ];
+
+    const errors = [
+      {id:'ERR-001',timestamp:'17/08/2026 18:02:31',agent:'Mercury Sales Agent',type:'Crítico',description:'CRM connection failed.',stack:'AgentHubExecutionError: CRM connection failed.\n    at AgentRuntime.execute (/agenthub/runtime/executor.js:184:17)\n    at AgentRuntime.processTask (/agenthub/runtime/agent.js:92:11)\n    at SkillRunner.run (/agenthub/runtime/skills.js:67:21)\n    at async TaskQueue.consume (/agenthub/runtime/queue.js:143:9)',resolved:false},
+      {id:'ERR-002',timestamp:'17/08/2026 16:45:12',agent:'Atlas Researcher',type:'Advertencia',description:'Rate limit approaching.',stack:'AgentHubWarning: Rate limit approaching.\n    at WebNavigation.request (/agenthub/skills/web.js:88:14)\n    at AgentRuntime.execute (/agenthub/runtime/executor.js:184:17)\n    at async TaskQueue.consume (/agenthub/runtime/queue.js:143:9)',resolved:false},
+      {id:'ERR-003',timestamp:'17/08/2026 14:23:07',agent:'Nova Assistant',type:'Timeout',description:'Calendar API timed out.',stack:'AgentHubTimeoutError: Calendar API timed out.\n    at CalendarSkill.request (/agenthub/skills/calendar.js:112:18)\n    at SkillRunner.run (/agenthub/runtime/skills.js:67:21)\n    at async AgentRuntime.execute (/agenthub/runtime/executor.js:184:17)',resolved:false},
+      {id:'ERR-004',timestamp:'17/08/2026 11:17:44',agent:'Orion Document AI',type:'Crítico',description:'OCR processing failed.',stack:'AgentHubExecutionError: OCR processing failed.\n    at OCRSkill.process (/agenthub/skills/ocr.js:143:22)\n    at SkillRunner.run (/agenthub/runtime/skills.js:67:21)\n    at async AgentRuntime.execute (/agenthub/runtime/executor.js:184:17)',resolved:false},
+      {id:'ERR-005',timestamp:'16/08/2026 22:41:09',agent:'Mercury Sales Agent',type:'Advertencia',description:'Email queue delayed.',stack:'AgentHubWarning: Email queue delayed.\n    at EmailSkill.enqueue (/agenthub/skills/email.js:71:15)\n    at SkillRunner.run (/agenthub/runtime/skills.js:67:21)\n    at async AgentRuntime.execute (/agenthub/runtime/executor.js:184:17)',resolved:false},
+      {id:'ERR-006',timestamp:'16/08/2026 19:05:55',agent:'Atlas Researcher',type:'Timeout',description:'External website response timeout.',stack:'AgentHubTimeoutError: External website response timeout.\n    at WebNavigation.request (/agenthub/skills/web.js:88:14)\n    at AgentRuntime.execute (/agenthub/runtime/executor.js:184:17)\n    at async TaskQueue.consume (/agenthub/runtime/queue.js:143:9)',resolved:false}
+    ];
+
+    const navLinks=document.querySelectorAll('.nav-link');
+    const sections=document.querySelectorAll('.app-section');
+    const breadcrumb=document.getElementById('breadcrumb');
+    const sidebar=document.getElementById('sidebar');
+    const sidebarBackdrop=document.getElementById('sidebarBackdrop');
+    const sidebarOpen=document.getElementById('sidebarOpen');
+    const sidebarClose=document.getElementById('sidebarClose');
+    const themeToggle=document.getElementById('themeToggle');
+    const themeIcon=document.getElementById('themeIcon');
+    const modalBackdrop=document.getElementById('modalBackdrop');
+    const modal=document.getElementById('modal');
+    const modalTitle=document.getElementById('modalTitle');
+    const modalBody=document.getElementById('modalBody');
+    const modalClose=document.getElementById('modalClose');
+    const modalFooterClose=document.getElementById('modalFooterClose');
+
+    const sectionNames={dashboard:'Dashboard',users:'Users',agents:'Agents',skills:'Skills',hires:'Hires',errors:'Error Logs'};
+    const escapeHtml=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+    const formatCurrency=value=>new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(value);
+    const statusClasses=status=>status==='Activo'||status==='Resuelto'?'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300':status==='Fallando'?'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300':'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
+    const errorTypeClasses=type=>type==='Crítico'?'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300':'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300';
+
+    function openSidebar(){ sidebar.classList.remove('-translate-x-full'); sidebarBackdrop.classList.remove('hidden'); sidebarOpen.setAttribute('aria-expanded','true'); document.body.classList.add('overflow-hidden','lg:overflow-auto'); }
+    function closeSidebar(){ sidebar.classList.add('-translate-x-full'); sidebarBackdrop.classList.add('hidden'); sidebarOpen.setAttribute('aria-expanded','false'); document.body.classList.remove('overflow-hidden'); }
+    sidebarOpen.addEventListener('click',openSidebar); sidebarClose.addEventListener('click',closeSidebar); sidebarBackdrop.addEventListener('click',closeSidebar);
+
+    function applyTheme(theme){const dark=theme==='dark';document.documentElement.classList.toggle('dark',dark);themeIcon.textContent=dark?'☀':'☾';themeToggle.setAttribute('aria-pressed',String(dark));themeToggle.setAttribute('aria-label',dark?'Cambiar a modo claro':'Cambiar a modo oscuro');localStorage.setItem('agenthub-theme',theme);}
+    function initializeTheme(){const saved=localStorage.getItem('agenthub-theme');if(saved==='dark'||saved==='light'){applyTheme(saved);return;}applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}
+    themeToggle.addEventListener('click',()=>applyTheme(document.documentElement.classList.contains('dark')?'light':'dark'));
+
+    navLinks.forEach(link=>link.addEventListener('click',()=>{const target=link.dataset.section;sections.forEach(section=>section.classList.toggle('hidden',section.id!==`section-${target}`));navLinks.forEach(item=>{item.classList.remove('border-indigo-500','bg-slate-800/60','text-white');item.classList.add('border-transparent');item.removeAttribute('aria-current');});link.classList.remove('border-transparent');link.classList.add('border-indigo-500','bg-slate-800/60','text-white');link.setAttribute('aria-current','page');breadcrumb.textContent=`Administration / ${sectionNames[target]}`;closeAllDropdowns();closeSidebar();}));
+
+    function closeAllDropdowns(){document.querySelectorAll('.dropdown-menu').forEach(menu=>menu.classList.add('hidden'));}
+    function toggleDropdown(trigger){const menu=trigger.parentElement.querySelector('.dropdown-menu');if(!menu)return;const wasHidden=menu.classList.contains('hidden');closeAllDropdowns();if(wasHidden)menu.classList.remove('hidden');}
+    document.addEventListener('click',event=>{const trigger=event.target.closest('.dropdown-trigger');const menu=event.target.closest('.dropdown-menu');if(trigger){event.stopPropagation();toggleDropdown(trigger);return;}if(!menu)closeAllDropdowns();});
+
+    function openModal(title,content){closeAllDropdowns();modalTitle.textContent=title;modalBody.innerHTML=content;modalBackdrop.classList.remove('hidden');modalBackdrop.classList.add('flex');document.body.classList.add('overflow-hidden');modalClose.focus();}
+    function closeModal(){modalBackdrop.classList.add('hidden');modalBackdrop.classList.remove('flex');document.body.classList.remove('overflow-hidden');modalBody.innerHTML='';}
+    modalClose.addEventListener('click',closeModal);modalFooterClose.addEventListener('click',closeModal);modalBackdrop.addEventListener('click',event=>{if(event.target===modalBackdrop)closeModal();});modal.addEventListener('click',event=>event.stopPropagation());
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeModal();closeAllDropdowns();if(!sidebar.classList.contains('-translate-x-full'))closeSidebar();}});
+
+    function renderUsers(){document.getElementById('usersTableBody').innerHTML=users.map(user=>`<tr class="transition hover:bg-slate-50 dark:hover:bg-slate-700/40"><td class="px-4 py-4 sm:px-6"><div class="flex items-center gap-3"><div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300" aria-hidden="true">${escapeHtml(user.initials)}</div><span class="font-medium text-slate-800 dark:text-slate-100">${escapeHtml(user.name)}</span></div></td><td class="px-4 py-4 text-slate-500 dark:text-slate-400 sm:px-6">${escapeHtml(user.email)}</td><td class="px-4 py-4 text-slate-700 dark:text-slate-300 sm:px-6">${escapeHtml(user.plan)}</td><td class="px-4 py-4 sm:px-6"><span class="rounded-full px-2.5 py-1 text-xs font-medium ${statusClasses(user.status)}">${escapeHtml(user.status)}</span></td><td class="relative px-4 py-4 text-right sm:px-6"><button type="button" class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Acciones para ${escapeHtml(user.name)}">⋮</button><div class="dropdown-menu absolute right-4 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800 sm:right-6"><button type="button" data-action="user-detail" data-id="${user.id}" class="block w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700">Ver detalle</button><button type="button" class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button></div></td></tr>`).join('');}
+
+    function renderAgents(){document.getElementById('agentsList').innerHTML=agents.map(agent=>`<article class="rounded-xl border border-slate-200/80 bg-white shadow-sm transition-colors dark:border-slate-700 dark:bg-slate-800"><div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"><div class="flex min-w-0 items-center gap-3 sm:gap-4"><button type="button" data-action="accordion" aria-expanded="false" aria-label="Mostrar skills de ${escapeHtml(agent.name)}" class="accordion-trigger flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 transition hover:bg-indigo-200 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900"><span aria-hidden="true">⌄</span></button><div class="min-w-0"><h2 class="truncate font-semibold text-slate-800 dark:text-slate-100">${escapeHtml(agent.name)}</h2><p class="truncate text-sm text-slate-500 dark:text-slate-400">Propietario: ${escapeHtml(agent.owner)}</p></div></div><div class="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-end"><span class="rounded-full px-2.5 py-1 text-xs font-medium ${statusClasses(agent.status)}">${escapeHtml(agent.status)}</span><div class="relative"><button type="button" class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Acciones para ${escapeHtml(agent.name)}">⋮</button><div class="dropdown-menu absolute right-0 top-10 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"><button type="button" data-action="agent-config" data-id="${agent.id}" class="block w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700">Configurar</button><button type="button" class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button></div></div></div></div><div class="accordion-content max-h-0 overflow-hidden px-4 transition-all duration-300 ease-in-out sm:px-5"><div class="border-t border-slate-200 py-4 dark:border-slate-700"><p class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Skills asociadas</p><div class="flex flex-wrap gap-2 pb-2">${agent.skills.map(skill=>`<span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">${escapeHtml(skill)}</span>`).join('')}</div></div></div></article>`).join('');}
+
+    function renderSkills(){document.getElementById('skillsGrid').innerHTML=skills.map(skill=>`<article class="relative rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm transition-colors dark:border-slate-700 dark:bg-slate-800"><div class="flex items-start justify-between gap-4"><div class="min-w-0"><h2 class="font-semibold text-slate-800 dark:text-slate-100">${escapeHtml(skill.name)}</h2><p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">${escapeHtml(skill.description)}</p><p class="mt-4 text-xs font-semibold text-indigo-600 dark:text-indigo-400">${skill.enabledAgents} ${skill.enabledAgents===1?'agente':'agentes'} habilitado${skill.enabledAgents===1?'':'s'}</p></div><div class="relative shrink-0"><button type="button" class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Acciones para ${escapeHtml(skill.name)}">⋮</button><div class="dropdown-menu absolute right-0 top-10 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"><button type="button" data-action="skill-detail" data-id="${skill.id}" class="block w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700">Ver detalle</button><button type="button" class="block w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-700">Eliminar</button></div></div></div></article>`).join('');}
+
+    function renderHires(){document.getElementById('hiresTableBody').innerHTML=hires.map(hire=>`<tr class="transition hover:bg-slate-50 dark:hover:bg-slate-700/40"><td class="px-4 py-4 font-medium text-slate-800 dark:text-slate-100 sm:px-6">${escapeHtml(hire.client)}</td><td class="px-4 py-4 text-slate-700 dark:text-slate-300 sm:px-6">${escapeHtml(hire.agent)}</td><td class="px-4 py-4 text-slate-500 dark:text-slate-400 sm:px-6">${hire.skills.map(escapeHtml).join(', ')}</td><td class="whitespace-nowrap px-4 py-4 text-slate-500 dark:text-slate-400 sm:px-6">${escapeHtml(hire.start)} — ${escapeHtml(hire.end)}</td><td class="whitespace-nowrap px-4 py-4 font-semibold text-slate-800 dark:text-slate-100 sm:px-6">${formatCurrency(hire.total)}</td><td class="relative px-4 py-4 text-right sm:px-6"><button type="button" class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Acciones para contrato ${escapeHtml(hire.id)}">⋮</button><div class="dropdown-menu absolute right-4 top-12 z-20 hidden w-40 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800 sm:right-6"><button type="button" data-action="hire-detail" data-id="${hire.id}" class="block w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700">Ver detalle</button></div></td></tr>`).join('');}
+
+    function renderErrors(){document.getElementById('errorsTableBody').innerHTML=errors.map(error=>{const status=error.resolved?'Resuelto':'Pendiente';return `<tr data-error-row="${error.id}" class="transition hover:bg-slate-50 dark:hover:bg-slate-700/40 ${error.resolved?'bg-emerald-50/40 dark:bg-emerald-950/20':''}"><td class="whitespace-nowrap px-4 py-4 text-slate-500 dark:text-slate-400 sm:px-6">${escapeHtml(error.timestamp)}</td><td class="px-4 py-4 font-medium text-slate-800 dark:text-slate-100 sm:px-6">${escapeHtml(error.agent)}</td><td class="px-4 py-4 sm:px-6"><span class="whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium ${errorTypeClasses(error.type)}">${escapeHtml(error.type)}</span></td><td class="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">${escapeHtml(error.description)}</td><td class="error-status px-4 py-4 sm:px-6"><span class="whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium ${statusClasses(status)}">${status}</span></td><td class="relative px-4 py-4 text-right sm:px-6"><button type="button" class="dropdown-trigger rounded-lg px-2 py-1 text-xl text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Acciones para ${escapeHtml(error.id)}">⋮</button><div class="dropdown-menu absolute right-4 top-12 z-20 hidden w-48 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg dark:border-slate-700 dark:bg-slate-800 sm:right-6"><button type="button" data-action="error-detail" data-id="${error.id}" class="block w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700">Ver detalle</button>${error.resolved?'':`<button type="button" data-action="resolve-error" data-id="${error.id}" class="block w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700">Marcar como resuelto</button>`}</div></td></tr>`;}).join('');}
+
+    function showUserDetail(id){const user=users.find(item=>item.id===id);if(!user)return;openModal(`Detalle de ${user.name}`,`<div class="space-y-6"><div class="grid grid-cols-1 gap-4 sm:grid-cols-2"><div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">ID</p><p class="mt-1 font-mono text-sm text-slate-800 dark:text-slate-200">${escapeHtml(user.id)}</p></div><div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Fecha de alta</p><p class="mt-1 font-medium text-slate-800 dark:text-slate-200">${escapeHtml(user.signup)}</p></div><div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Método de pago</p><p class="mt-1 font-medium text-slate-800 dark:text-slate-200">${escapeHtml(user.payment)}</p></div><div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Plan</p><p class="mt-1 font-medium text-slate-800 dark:text-slate-200">${escapeHtml(user.plan)}</p></div></div><section><h3 class="font-semibold text-slate-800 dark:text-slate-100">Límites del plan</h3><div class="mt-3 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700"><div class="flex justify-between gap-4 border-b border-slate-200 px-4 py-3 dark:border-slate-700"><span class="text-slate-600 dark:text-slate-300">Agentes</span><span class="font-semibold text-slate-800 dark:text-slate-100">${escapeHtml(user.limits.agents)}</span></div><div class="flex justify-between gap-4 border-b border-slate-200 px-4 py-3 dark:border-slate-700"><span class="text-slate-600 dark:text-slate-300">Ejecuciones mensuales</span><span class="font-semibold text-slate-800 dark:text-slate-100">${escapeHtml(user.limits.executions)}</span></div><div class="flex justify-between gap-4 px-4 py-3"><span class="text-slate-600 dark:text-slate-300">Usuarios del equipo</span><span class="font-semibold text-slate-800 dark:text-slate-100">${escapeHtml(user.limits.teamUsers)}</span></div></div></section></div>`);}
+
+    function showAgentConfig(id){const agent=agents.find(item=>item.id===id);if(!agent)return;openModal(`Configurar — ${agent.name}`,`<div><label for="systemPrompt" class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">System Prompt</label><textarea id="systemPrompt" class="min-h-[260px] w-full resize-y rounded-lg border border-slate-300 bg-white p-4 font-mono text-sm leading-6 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 sm:min-h-[320px]">${escapeHtml(agent.systemPrompt)}</textarea><p class="mt-2 text-xs text-slate-500 dark:text-slate-400">El System Prompt es editable en este prototipo frontend.</p></div>`);}
+    function showSkillDetail(id){const skill=skills.find(item=>item.id===id);if(!skill)return;openModal(`Detalle técnico — ${skill.name}`,`<div class="space-y-6"><div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Identificador</p><p class="mt-1 font-mono text-sm text-slate-800 dark:text-slate-200">${escapeHtml(skill.id)}</p></div><div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Descripción</p><p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">${escapeHtml(skill.technical)}</p></div><div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Permisos</p><div class="mt-2 flex flex-wrap gap-2">${skill.permissions.map(permission=>`<span class="rounded-full bg-indigo-100 px-3 py-1 text-xs text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">${escapeHtml(permission)}</span>`).join('')}</div></div><div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Agentes habilitados</p><p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-200">${skill.enabledAgents}</p></div><div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estado</p><span class="mt-2 inline-block rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Disponible</span></div></div>`);}
+    function showHireDetail(id){const hire=hires.find(item=>item.id===id);if(!hire)return;const agent=agents.find(item=>item.name===hire.agent);openModal(`Contrato — ${hire.client}`,`<div class="space-y-6"><div class="grid grid-cols-1 gap-4 sm:grid-cols-2"><div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Cliente</p><p class="mt-1 font-medium text-slate-800 dark:text-slate-200">${escapeHtml(hire.client)}</p></div><div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Contrato</p><p class="mt-1 font-mono text-sm text-slate-800 dark:text-slate-200">${escapeHtml(hire.id)}</p></div><div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Agente</p><p class="mt-1 font-medium text-slate-800 dark:text-slate-200">${escapeHtml(hire.agent)}</p></div><div class="rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Propietario del agente</p><p class="mt-1 font-medium text-slate-800 dark:text-slate-200">${agent?escapeHtml(agent.owner):'—'}</p></div></div><section><h3 class="mb-3 font-semibold text-slate-800 dark:text-slate-100">Desglose financiero</h3><div class="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700"><div class="flex justify-between gap-4 border-b border-slate-200 px-4 py-3 dark:border-slate-700"><span class="text-slate-600 dark:text-slate-300">Precio base del agente</span><span class="font-medium text-slate-800 dark:text-slate-100">${formatCurrency(hire.basePrice)}</span></div>${hire.skills.map(skill=>`<div class="flex justify-between gap-4 border-b border-slate-200 px-4 py-3 dark:border-slate-700"><span class="text-slate-600 dark:text-slate-300">${escapeHtml(skill)}</span><span class="font-medium text-slate-800 dark:text-slate-100">${formatCurrency(hire.skillPrices[skill])}</span></div>`).join('')}<div class="flex justify-between gap-4 bg-slate-50 px-4 py-4 dark:bg-slate-900/60"><span class="font-bold text-slate-800 dark:text-slate-100">Total</span><span class="font-bold text-indigo-600 dark:text-indigo-400">${formatCurrency(hire.total)}</span></div></div></section></div>`);}
+    function showErrorDetail(id){const error=errors.find(item=>item.id===id);if(!error)return;openModal(`Stack Trace — ${error.agent}`,`<div class="space-y-5"><div class="grid grid-cols-1 gap-4 sm:grid-cols-2"><div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Error ID</p><p class="mt-1 font-mono text-sm text-slate-800 dark:text-slate-200">${escapeHtml(error.id)}</p></div><div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tipo</p><span class="mt-1 inline-block rounded-full px-2.5 py-1 text-xs font-medium ${errorTypeClasses(error.type)}">${escapeHtml(error.type)}</span></div></div><div><p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Stack Trace</p><pre class="max-w-full overflow-x-auto rounded-lg bg-slate-950 p-4 text-xs leading-6 text-slate-300">${escapeHtml(error.stack)}</pre></div><div class="rounded-lg border border-slate-200 p-4 dark:border-slate-700"><p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Descripción</p><p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${escapeHtml(error.description)}</p></div></div>`);}
+    function resolveError(id){const error=errors.find(item=>item.id===id);if(!error)return;error.resolved=true;renderErrors();closeAllDropdowns();}
+
+    document.addEventListener('click',event=>{const actionElement=event.target.closest('[data-action]');if(!actionElement)return;const action=actionElement.dataset.action;const id=actionElement.dataset.id;switch(action){case'user-detail':showUserDetail(id);break;case'agent-config':showAgentConfig(id);break;case'skill-detail':showSkillDetail(id);break;case'hire-detail':showHireDetail(id);break;case'error-detail':showErrorDetail(id);break;case'resolve-error':resolveError(id);break;case'accordion':{const article=actionElement.closest('article');const content=article.querySelector('.accordion-content');const icon=actionElement.querySelector('span');const expanded=actionElement.getAttribute('aria-expanded')==='true';content.classList.toggle('max-h-40',!expanded);content.classList.toggle('max-h-0',expanded);actionElement.setAttribute('aria-expanded',String(!expanded));icon.textContent=expanded?'⌄':'⌃';break;}}});
+
+    initializeTheme();renderUsers();renderAgents();renderSkills();renderHires();renderErrors();
   </script>
-
 </body>
 </html>
